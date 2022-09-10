@@ -55,17 +55,9 @@ const getServiceItems = async (sno) => {
 	await AsyncStorage.getItem('serviceItems').then((res) => {
 		prevCalendar = JSON.parse(res);
 	});
-	let sss =[]
-	prevCalendar.forEach((da) => {
-		if (da.servicenumber === sno) {
-			sessionStorage.push(da)
-		}
-	})
 	let sit = await prevCalendar.filter(
 		(data) => data.servicenumber.includes(sno)
 	);
-	console.log(sss);
-	// await console.log(sno);
 	return sit;
 };
 

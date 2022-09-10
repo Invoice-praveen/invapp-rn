@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import ItemCard from '../../cards/ItemCard';
 import { getServiceItems } from '../../data/dataConfig';
 
 export default function CompleteService({ navigation, route }) {
 	const [serviceItems, setServiceItems] = useState([]);
+	const [refreshing, setRefreshing] = useState(false);
 	const { name, date, service_number, ammount } = route.params;
 
 	const getItems = async () => {
 		await getServiceItems(service_number).then((res) => {
-			setServiceItems(res)
-		})
+			setServiceItems(res);
+		});
 	};
+	const onRefresh = React.useCallback(async () => {
+		setRefreshing(true);
+		await getItems();
+		setRefreshing(false);
+	}, []);
 
 	useEffect(() => {
 		getItems();
@@ -93,7 +99,10 @@ export default function CompleteService({ navigation, route }) {
 					</View>
 				</View>
 			</View>
-			<ScrollView>
+			<ScrollView
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}>
 				<View
 					style={{
 						flex: 1,
@@ -103,7 +112,13 @@ export default function CompleteService({ navigation, route }) {
 						marginTop: 10,
 					}}>
 					{serviceItems.map((data1, idx) => (
-						<ItemCard itemName={`${data1.productName}, ${data1.servicenumber}`} itemQty={data1.qty} itemPrice={data1.price} />
+						<ItemCard
+							key={idx}
+							itemName={`${data1.productName}`}
+							itemQty={data1.qty}
+							itemPrice={data1.price}
+							id={data1.id}
+						/>
 					))}
 				</View>
 			</ScrollView>
@@ -114,6 +129,7 @@ export default function CompleteService({ navigation, route }) {
 					width: '100%',
 				}}>
 				{serviceItems.length > 0 ? (
+					<>
 					<TouchableOpacity
 						style={{
 							padding: 10,
@@ -134,6 +150,37 @@ export default function CompleteService({ navigation, route }) {
 						}}>
 						<Text style={{ marginLeft: 10, marginRight: 10 }}>Payments</Text>
 					</TouchableOpacity>
+						<TouchableOpacity
+						onPress={() => {
+							navigation.navigate('addserviceitems', {
+								title: 'Ser.' + service_number,
+								name,
+								date,
+								service_number,
+								ammount,
+							});
+						}}
+						style={{
+							padding: 10,
+							justifyContent: 'center',
+							alignItems: 'center',
+							borderColor: '#6028FF',
+							backgroundColor: '#FFFFFF',
+							borderWidth: 1,
+							width: 150,
+							marginLeft: 10,
+							borderRadius: 30,
+							shadowOffset: {
+								width: 5,
+								height: 5,
+							},
+							shadowOpacity: 1,
+							shadowRadius: 10,
+							elevation: 5,
+						}}>
+						<Text style={{ marginLeft: 10, marginRight: 10 }}>Add Items</Text>
+						</TouchableOpacity>
+						</>
 				) : (
 					<TouchableOpacity
 						onPress={() => {

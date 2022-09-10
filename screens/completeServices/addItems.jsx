@@ -6,7 +6,7 @@ import { CreateServiceItems } from '../../data/dataConfig';
 export default function AddServiceItemsScreen({ navigation, route }) {
 	const { name, date, service_number, ammount } = route.params;
 	const [productName, setProductName] = useState('');
-	const [servicenumber, setServicenumber] = useState('');
+	const [id, setId] = useState('');
 	const [price, setPrice] = useState('0');
 	const [qty, setQty] = useState('0');
     const [total, setTotal] = useState('0');
@@ -22,14 +22,15 @@ export default function AddServiceItemsScreen({ navigation, route }) {
 		let lld = arr[0] + arr[1] + arr[2];
 		let x = lld.split('.');
 		lld = x[0] + x[1];
-        setServicenumber(lld);
+        setId(lld);
         ProductRef.current.focus()
 	}, []);
 
 	const Save = async () => {
 		let data = {
+			id,
 			productName,
-			servicenumber,
+			servicenumber: service_number,
 			price,
 			qty,
 			total,
