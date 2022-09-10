@@ -8,8 +8,9 @@ export default function CompleteService({ navigation, route }) {
 	const { name, date, service_number, ammount } = route.params;
 
 	const getItems = async () => {
-		const res = await getServiceItems();
-		setServiceItems(res);
+		await getServiceItems(service_number).then((res) => {
+			setServiceItems(res)
+		})
 	};
 
 	useEffect(() => {
@@ -102,7 +103,7 @@ export default function CompleteService({ navigation, route }) {
 						marginTop: 10,
 					}}>
 					{serviceItems.map((data1, idx) => (
-						<ItemCard itemName='Distilled Water' itemQty='2' itemPrice='10' />
+						<ItemCard itemName={`${data1.productName}, ${data1.servicenumber}`} itemQty={data1.qty} itemPrice={data1.price} />
 					))}
 				</View>
 			</ScrollView>
@@ -138,6 +139,10 @@ export default function CompleteService({ navigation, route }) {
 						onPress={() => {
 							navigation.navigate('addserviceitems', {
 								title: 'Ser.' + service_number,
+								name,
+								date,
+								service_number,
+								ammount,
 							});
 						}}
 						style={{

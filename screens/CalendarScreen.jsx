@@ -89,7 +89,7 @@ export default function CalendarScreen({ navigation }) {
 							marginTop: 10,
 							alignItems: 'center',
 						}}>
-						{data.map((dt, idx) =>
+						{data?.map((dt, idx) =>
 							dt === null ? null : dt.status === 'pending' ? (
 								<ServiceCardComponent
 									key={idx}
@@ -111,7 +111,7 @@ export default function CalendarScreen({ navigation }) {
 						style={{
 							marginTop: 10,
 						}}>
-						{data.map((dt, idx) =>
+						{data?.map((dt, idx) =>
 							dt === null ? (
 								<View
 									style={{
